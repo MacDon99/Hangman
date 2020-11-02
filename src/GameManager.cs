@@ -34,7 +34,7 @@ namespace src
             LifePoints = 5;
             WordToGuess = GetRandomWordFromFile();
             HiddenWord = EncodeWord(WordToGuess.Item2);
-            System.Console.WriteLine("Word has been drawn, time to guess!");
+            System.Console.WriteLine("Word had been drawn, time to guess!");
             var newText = "";
             do
             {
@@ -42,14 +42,42 @@ namespace src
                 switch(newText)
                 {
                     case "letter":
+                        CheckIfWordToGuessContainGivenLetter();
                         break;
                     case "word":
+                        CheckIfWordToGuessEqualsGivenWord();
                         break;
                     case "end":
                         EndGame();
                         break;
                 }
             }while(newText != "end");
+        }
+
+        private void CheckIfWordToGuessEqualsGivenWord()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CheckIfWordToGuessContainGivenLetter()
+        {
+            Console.WriteLine("Write the letter you want to check");
+            var letterToCheck = Console.ReadLine();
+            System.Console.WriteLine(WordToGuess.Item2);
+            var normalisedWordToGuess = WordToGuess.Item2.ToLower();
+
+            if(normalisedWordToGuess.Contains(letterToCheck))
+            {
+                var x = HiddenWord.ToCharArray();
+
+                for(int i=0; i< x.Count(); i++)
+                {
+                    if(normalisedWordToGuess[i] == Convert.ToChar(letterToCheck))
+                                x[i] = WordToGuess.Item2[i];
+                }
+                HiddenWord = new string(x);
+                System.Console.WriteLine(HiddenWord);
+            }
         }
 
         public string AskForGuessingType()
