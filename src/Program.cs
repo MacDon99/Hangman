@@ -9,30 +9,26 @@ namespace src
     {
         static void Main(string[] args)
         {
-            var (city, capital) = getRandomWordFromFile();
-            System.Console.WriteLine(city);
+            var gm = new GameManager();
+            var (city, capital) = gm.GetRandomWordFromFile();
+
+            var encoded = EncodeWord(capital);
             System.Console.WriteLine(capital);
+            System.Console.WriteLine(encoded);
+            gm.GenerateGameRules();
         }
-        private static (string, string) getRandomWordFromFile()
+
+        private static string EncodeWord(string word)
         {
-            var filePath = "files/countries_and_capitals.txt";
-            var dictionary = new Dictionary<string, string>();
-            var rand = new Random();
-
-            File.ReadAllLines(filePath)
-                .ToList()
-                .ForEach(el => {
-                    var splittedItems = el.Split(" | ");
-                    if(splittedItems.Count() == 2)
-                        dictionary.Add(splittedItems[0],splittedItems[1]);
-                    });
-
-            var randomItemIndex = rand.Next(0, dictionary.Count);
-
-            var city = dictionary.Keys.ElementAt(randomItemIndex);
-            var capital = dictionary.Values.ElementAt(randomItemIndex);
-
-            return (city, capital);
+            var encodedWord = "";
+            foreach(var letter in word)
+            {
+                if(letter != ' ')
+                    encodedWord += "_";
+                else
+                    encodedWord += " ";
+            }
+            return encodedWord;
         }
     }
 }
