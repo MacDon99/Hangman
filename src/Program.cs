@@ -10,25 +10,32 @@ namespace src
         static void Main(string[] args)
         {
             var gm = new GameManager();
-            var (city, capital) = gm.GetRandomWordFromFile();
-
-            var encoded = EncodeWord(capital);
-            System.Console.WriteLine(capital);
-            System.Console.WriteLine(encoded);
-            gm.GenerateGameRules();
-        }
-
-        private static string EncodeWord(string word)
-        {
-            var encodedWord = "";
-            foreach(var letter in word)
+            var enteredText = "";
+            gm.ShowGameRules();
+            do
             {
-                if(letter != ' ')
-                    encodedWord += "_";
-                else
-                    encodedWord += " ";
-            }
-            return encodedWord;
+                if (enteredText != "returned")
+                    enteredText = Console.ReadLine();
+
+                switch(enteredText)
+                {
+                    case "start":
+                        gm.StartGame();
+                        enteredText = "returned";
+                        break;
+                    case "returned":
+                        Console.Clear();
+                        gm.ShowGameRules();
+                        enteredText = "";
+                        break;
+                    case "exit":
+                        Console.WriteLine("Thanks for playing.");
+                        break;
+                    default:
+                        Console.WriteLine("Type the right option.");
+                        break;
+                }
+            }while(enteredText != "exit");
         }
     }
 }
