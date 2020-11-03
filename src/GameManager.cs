@@ -8,10 +8,14 @@ namespace src
 {
     public class GameManager
     {
-        public bool GameOver { get; set; }
-        public int LifePoints { get; private set; }
-        public string HiddenWord { get; set; }
-        public (string, string) WordToGuess { get; set; }
+        private bool GameOver { get; set; }
+        private int LifePoints { get; set; }
+        private string HiddenWord { get; set; }
+        private int Tries { get; set; }
+        private DateTime StartTime { get; set; } = DateTime.Now;
+        private DateTime EndTime { get; set; }
+        private TimeSpan AverageTime { get; set; }
+        private (string, string) WordToGuess { get; set; }
 
         public GameManager()
         {
@@ -43,10 +47,17 @@ namespace src
                     return;
                 }
                 Console.Clear();
+
+                if(Tries == 5 && LifePoints == 5)
+                {
+                    System.Console.WriteLine($"Hint: The capital of {WordToGuess.Item1}");
+                }
                 Console.WriteLine("Word to guess: " + HiddenWord);
                 Console.WriteLine("Word to guess: " + WordToGuess.Item2);
                 Console.WriteLine("Your life points: " + LifePoints);
+
                 newText = AskForGuessingType();
+
                 switch(newText)
                 {
                     case "letter":
@@ -56,8 +67,9 @@ namespace src
                         CheckIfWordToGuessEqualsGivenWord();
                         break;
                     case "end":
-                        Console.WriteLine("You have lost. Drawn word was: " + HiddenWord);
+                        Console.WriteLine("You have lost. Drawn word was: " + WordToGuess.Item2);
                         EndGame();
+                        GameOver = false;
                         break;
                 }
             }while(newText != "end");
@@ -72,11 +84,15 @@ namespace src
             if(normalizedWordToGuess.Equals(wordToCheck))
             {
                 Console.WriteLine("Your guess is good, you win! Press any key to continue.");
+                Tries++;
+                EndTime = DateTime.Now;
+                AverageTime = EndTime - StartTime;
                 EndGame();
             } 
             else 
             {
                 Console.WriteLine("Unfortunately, the drawn word is not equal to your guess.");
+                Tries++;
                 TakeOneLife();
                 TakeOneLife();
                 Console.WriteLine("You loose two life points, press any key to continue.");
@@ -101,11 +117,14 @@ namespace src
                 }
                 HiddenWord = new string(x);
                 Console.WriteLine("You hit a good letter! Press any key to continue.");
+                Tries++;
+                CheckIfWin();
                 Console.ReadKey();
             } 
             else 
             {
                 Console.WriteLine("Unfortunately, the drawn word does not contain given letter.");
+                Tries++;
                 TakeOneLife();
             }
         }
@@ -168,9 +187,18 @@ namespace src
             }
             return encodedWord;
         }
+        private void CheckIfWin()
+        {
+            if(!HiddenWord.Contains("_"))
+            {
+                Console.WriteLine("Congratulations, you won!");
+                EndGame();
+            }
+        }
         private void EndGame()
         {
             GameOver = true;
+            Console.WriteLine($"Game took you {Tries} tries and {AverageTime.Minutes} mins and {AverageTime.Seconds} seconds.");
             System.Console.WriteLine("Press any key to return to main menu.");
             Console.ReadKey();
         }
