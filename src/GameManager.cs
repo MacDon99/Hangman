@@ -15,12 +15,10 @@ namespace src
         private DateTime StartTime { get; set; } = DateTime.Now;
         private DateTime EndTime { get; set; }
         private TimeSpan AverageTime { get; set; }
+        private string WrongLetters { get; set; }
+        private string Name { get; set;}
         private (string, string) WordToGuess { get; set; }
 
-        public GameManager()
-        {
-            GameOver = false;
-        }
         public void ShowGameRules()
         {
             Console.WriteLine("Welcome to the Hangman game!");
@@ -35,50 +33,65 @@ namespace src
         public void StartGame()
         {
             LifePoints = 5;
+            GameOver = false;
+            WrongLetters = "";
             WordToGuess = GetRandomWordFromFile();
             HiddenWord = EncodeWord(WordToGuess.Item2);
-            var newText = "";
+            
+            string answer = "";
             do
             {
                 if(GameOver)
-                {
-                    GameOver = false;
-                    LifePoints = 5;
                     return;
-                }
+
                 Console.Clear();
 
                 if(Tries == 5 && LifePoints == 5)
                 {
                     System.Console.WriteLine($"Hint: The capital of {WordToGuess.Item1}");
                 }
-                Console.WriteLine("Word to guess: " + HiddenWord);
-                Console.WriteLine("Word to guess: " + WordToGuess.Item2);
-                Console.WriteLine("Your life points: " + LifePoints);
+                Console.WriteLine($"Word to guess: {HiddenWord}\nWrong letters: {WrongLetters}\nYour life points: {LifePoints}");
 
-                newText = AskForGuessingType();
-
-                switch(newText)
+                Console.WriteLine("Do you want to guess a letter or a whole word?");
+                Console.WriteLine("Write end if you want to exit the game.");
+                do
                 {
-                    case "letter":
-                        CheckIfWordToGuessContainGivenLetter();
-                        break;
-                    case "word":
-                        CheckIfWordToGuessEqualsGivenWord();
-                        break;
-                    case "end":
-                        Console.WriteLine("You have lost. Drawn word was: " + WordToGuess.Item2);
-                        EndGame();
-                        GameOver = false;
-                        break;
-                }
-            }while(newText != "end");
+                    answer = Console.ReadLine();
+                    if(!string.IsNullOrEmpty(answer))
+                    {
+                        switch(answer)
+                        {
+                            case "letter":
+                                CheckIfWordToGuessContainGivenLetter();
+                                break;
+                            case "word":
+                                CheckIfWordToGuessEqualsGivenWord();
+                                break;
+                            case "end":
+                                EndGame();
+                                break;
+                            default:
+                                Console.WriteLine("Please enter correct option.");
+                                break;
+                        }
+                    } else {
+                        System.Console.WriteLine("Please enter correct option");
+                    }
+                }while(answer != "letter" && answer != "word" && answer != "end");
+            }while(answer != "end");
+                
         }
 
         private void CheckIfWordToGuessEqualsGivenWord()
         {
             Console.WriteLine("Write the word you want to check");
             var wordToCheck = Console.ReadLine();
+            if(string.IsNullOrEmpty(wordToCheck))
+            {
+                Console.WriteLine("Please enter correct value, press any key to continue.");
+                Console.ReadKey();
+                return;
+            }
             var normalizedWordToGuess = WordToGuess.Item2.ToLower();
 
             if(normalizedWordToGuess.Equals(wordToCheck))
@@ -94,9 +107,12 @@ namespace src
                 Console.WriteLine("Unfortunately, the drawn word is not equal to your guess.");
                 Tries++;
                 TakeOneLife();
-                TakeOneLife();
-                Console.WriteLine("You loose two life points, press any key to continue.");
-                Console.ReadKey();
+                if(LifePoints > 1)
+                {
+                    TakeOneLife();
+                    Console.WriteLine("You loose two life points, press any key to continue.");
+                    Console.ReadKey();
+                }
             }
         }
 
@@ -104,6 +120,12 @@ namespace src
         {
             Console.WriteLine("Write the letter you want to check");
             var letterToCheck = Console.ReadLine();
+            if(string.IsNullOrEmpty(letterToCheck))
+            {
+                System.Console.WriteLine("Please enter correct value, press any key to continue.");
+                Console.ReadKey();
+                return;
+            }
             var normalizedWordToGuess = WordToGuess.Item2.ToLower();
 
             if(normalizedWordToGuess.Contains(letterToCheck))
@@ -124,21 +146,10 @@ namespace src
             else 
             {
                 Console.WriteLine("Unfortunately, the drawn word does not contain given letter.");
+                WrongLetters += letterToCheck;
                 Tries++;
                 TakeOneLife();
             }
-        }
-
-        public string AskForGuessingType()
-        {
-            string answer = "";
-            Console.WriteLine("Do you want to guess a letter or a whole word?");
-            Console.WriteLine("Write end if you want to exit the game.");
-            do
-            {
-                answer = Console.ReadLine();
-            }while(answer != "letter" && answer != "word" && answer != "end");
-            return answer;
         }
         private (string, string) GetRandomWordFromFile()
         {
@@ -170,8 +181,6 @@ namespace src
             }
             else
                 {
-                    LifePoints = 0;
-                    Console.WriteLine("You have lost. Drawn word was: " + HiddenWord);
                     EndGame();
                 }
         }
@@ -192,14 +201,28 @@ namespace src
             if(!HiddenWord.Contains("_"))
             {
                 Console.WriteLine("Congratulations, you won!");
+                Console.WriteLine("Enter your name to save your score!");
+                Name = Console.ReadLine();
+                SaveHighScore();
                 EndGame();
             }
         }
+
+        private void SaveHighScore()
+        {
+
+        }
+
         private void EndGame()
         {
             GameOver = true;
+            LifePoints = 0;
+            Console.WriteLine("You have lost. Drawn word was: " + WordToGuess.Item2);
             Console.WriteLine($"Game took you {Tries} tries and {AverageTime.Minutes} mins and {AverageTime.Seconds} seconds.");
-            System.Console.WriteLine("Press any key to return to main menu.");
+            Console.WriteLine("====================");
+            Console.WriteLine("Scoreboard:");
+            Console.WriteLine("====================");
+            Console.WriteLine("Press any key to return to main menu.");
             Console.ReadKey();
         }
     }

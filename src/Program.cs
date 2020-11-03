@@ -7,35 +7,58 @@ namespace src
 {
     class Program
     {
+        public static GameManager GameManager { get; set; } = new GameManager();
+        public static string Option { get; set; }
         static void Main(string[] args)
         {
-            var gm = new GameManager();
-            var enteredText = "";
-            gm.ShowGameRules();
+            GameManager.ShowGameRules();
             do
             {
-                if (enteredText != "returned")
-                    enteredText = Console.ReadLine();
+                if (Option != "returned" && Option != "exit")
+                    Option = Console.ReadLine();
 
-                switch(enteredText)
+                switch(Option)
                 {
                     case "start":
-                        gm.StartGame();
-                        enteredText = "returned";
+                        GameManager.StartGame();
+                        Option = "returned";
                         break;
                     case "returned":
                         Console.Clear();
-                        enteredText = "";
-                        gm.ShowGameRules();
+                        AskIfPlayerWantToPlayAgain();
                         break;
                     case "exit":
-                        Console.WriteLine("Thanks for playing.");
                         break;
                     default:
                         Console.WriteLine("Type the right option.");
                         break;
                 }
-            }while(enteredText != "exit");
+            }while(Option != "exit");
+
+            Console.WriteLine("Thanks for playing.");
+        }
+
+        public static void AskIfPlayerWantToPlayAgain()
+        {
+             var currentOption = "";
+            Console.WriteLine("Do you want to play again?");
+            do
+            {
+                currentOption = Console.ReadLine();
+                switch(currentOption)
+                {
+                    case "yes":
+                        GameManager.ShowGameRules();
+                        Option = "start";
+                        break;
+                    case "no":
+                        Option = "exit";
+                        break;
+                    default:
+                        Console.WriteLine("Please enter a correct answer.");
+                        break;
+                }
+            }while(currentOption != "yes" && currentOption != "no");
         }
     }
 }
