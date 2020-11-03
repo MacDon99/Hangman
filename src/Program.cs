@@ -25,8 +25,8 @@ namespace src
                         break;
                     case "returned":
                         Console.Clear();
-                        gm.ShowGameRules();
                         enteredText = "";
+                        gm.ShowGameRules();
                         break;
                     case "exit":
                         Console.WriteLine("Thanks for playing.");

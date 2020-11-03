@@ -30,14 +30,22 @@ namespace src
         }
         public void StartGame()
         {
-            Console.Clear();
             LifePoints = 5;
             WordToGuess = GetRandomWordFromFile();
             HiddenWord = EncodeWord(WordToGuess.Item2);
-            System.Console.WriteLine("Word had been drawn, time to guess!");
             var newText = "";
             do
             {
+                if(GameOver)
+                {
+                    GameOver = false;
+                    LifePoints = 5;
+                    return;
+                }
+                Console.Clear();
+                Console.WriteLine("Word to guess: " + HiddenWord);
+                Console.WriteLine("Word to guess: " + WordToGuess.Item2);
+                Console.WriteLine("Your life points: " + LifePoints);
                 newText = AskForGuessingType();
                 switch(newText)
                 {
@@ -48,6 +56,7 @@ namespace src
                         CheckIfWordToGuessEqualsGivenWord();
                         break;
                     case "end":
+                        Console.WriteLine("You have lost. Drawn word was: " + HiddenWord);
                         EndGame();
                         break;
                 }
@@ -56,14 +65,29 @@ namespace src
 
         private void CheckIfWordToGuessEqualsGivenWord()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Write the word you want to check");
+            var wordToCheck = Console.ReadLine();
+            var normalizedWordToGuess = WordToGuess.Item2.ToLower();
+
+            if(normalizedWordToGuess.Equals(wordToCheck))
+            {
+                Console.WriteLine("Your guess is good, you win! Press any key to continue.");
+                EndGame();
+            } 
+            else 
+            {
+                Console.WriteLine("Unfortunately, the drawn word is not equal to your guess.");
+                TakeOneLife();
+                TakeOneLife();
+                Console.WriteLine("You loose two life points, press any key to continue.");
+                Console.ReadKey();
+            }
         }
 
         private void CheckIfWordToGuessContainGivenLetter()
         {
             Console.WriteLine("Write the letter you want to check");
             var letterToCheck = Console.ReadLine();
-            System.Console.WriteLine(WordToGuess.Item2);
             var normalizedWordToGuess = WordToGuess.Item2.ToLower();
 
             if(normalizedWordToGuess.Contains(letterToCheck))
@@ -76,7 +100,13 @@ namespace src
                                 x[i] = WordToGuess.Item2[i];
                 }
                 HiddenWord = new string(x);
-                System.Console.WriteLine(HiddenWord);
+                Console.WriteLine("You hit a good letter! Press any key to continue.");
+                Console.ReadKey();
+            } 
+            else 
+            {
+                Console.WriteLine("Unfortunately, the drawn word does not contain given letter.");
+                TakeOneLife();
             }
         }
 
@@ -116,10 +146,13 @@ namespace src
         private void TakeOneLife()
         {
             if(LifePoints > 1)
+            {
                 LifePoints--;
+            }
             else
                 {
                     LifePoints = 0;
+                    Console.WriteLine("You have lost. Drawn word was: " + HiddenWord);
                     EndGame();
                 }
         }
@@ -138,9 +171,8 @@ namespace src
         private void EndGame()
         {
             GameOver = true;
-            Console.WriteLine("You have lost.");
-            System.Console.WriteLine("Returning to main menu in 5 seconds.");
-            Thread.Sleep(5000);
+            System.Console.WriteLine("Press any key to return to main menu.");
+            Console.ReadKey();
         }
     }
 }
