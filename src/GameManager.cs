@@ -64,15 +64,15 @@ namespace src
             Console.WriteLine("Write the letter you want to check");
             var letterToCheck = Console.ReadLine();
             System.Console.WriteLine(WordToGuess.Item2);
-            var normalisedWordToGuess = WordToGuess.Item2.ToLower();
+            var normalizedWordToGuess = WordToGuess.Item2.ToLower();
 
-            if(normalisedWordToGuess.Contains(letterToCheck))
+            if(normalizedWordToGuess.Contains(letterToCheck))
             {
                 var x = HiddenWord.ToCharArray();
 
                 for(int i=0; i< x.Count(); i++)
                 {
-                    if(normalisedWordToGuess[i] == Convert.ToChar(letterToCheck))
+                    if(normalizedWordToGuess[i] == Convert.ToChar(letterToCheck))
                                 x[i] = WordToGuess.Item2[i];
                 }
                 HiddenWord = new string(x);
