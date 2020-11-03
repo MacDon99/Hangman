@@ -204,6 +204,8 @@ namespace src
             if(!HiddenWord.Contains("_"))
             {
                 Console.WriteLine("Congratulations, you won!");
+                EndTime = DateTime.Now;
+                AverageTime = EndTime - StartTime;
                 Console.WriteLine("Enter your name to save your score!");
                 Name = Console.ReadLine();
                 SaveHighScore();
@@ -213,11 +215,75 @@ namespace src
 
         private void SaveHighScore()
         {
-            var fs = new FileStream("files/highscores.txt", FileMode.Append, FileAccess.Write);
+            var totalScore = ((3600 - (AverageTime.Minutes * 60 + AverageTime.Seconds)*24 - Tries * 12) * 16) * LifePoints;
+
+            var highscores = File.ReadAllLines("files/highscores.txt");
+            var highscoresQuantity = highscores.Count();
+
+            var items = new List<HighScore>();
+
+            var fs = new FileStream("files/highscores.txt", FileMode.Open, FileAccess.ReadWrite);
+
+            var sr = new StreamReader(fs);
+            
+            for(int i=0; i<highscoresQuantity; i++)
+            {
+                try
+                {
+                    var line = sr.ReadLine().Split(" | ");
+                    items.Add(new HighScore(){
+                        Name = line[0],
+                        Date = line[1],
+                        Time = line[2],
+                        Tries = line[3],
+                        GuessingWord = line[4],
+                        Score = Convert.ToInt32(line[5])
+                    });
+                }
+                catch{}
+            }
+
+            items.Add(new HighScore(){
+                    Name = Name,
+                    Date = DateTime.Now.ToString("MM/dd/yyyy"),
+                    Time = AverageTime.Minutes + ":" + AverageTime.Seconds,
+                    Tries = Tries.ToString(),
+                    GuessingWord = WordToGuess.Item2,
+                    Score = totalScore
+            });
+
+            items = items.OrderByDescending(el => el.Score).ToList();
+            
+            sr.Close();
+            fs.Close();
+
+            fs = new FileStream("files/highscores.txt", FileMode.Create, FileAccess.Write);
             var sw = new StreamWriter(fs);
-            sw.WriteLine(Name + " | " + DateTime.Now.ToString("MM/dd/yyyy") + " | " + AverageTime.Minutes + ":" + AverageTime.Seconds + " | " + Tries + " | " + WordToGuess.Item2);
+
+            for(int i=0; i<10; i++)
+            {
+                try
+                {
+                    sw.WriteLine(items[i].Name + " | " + items[i].Date + " | " + items[i].Time + " | " + items[i].Tries + " | " + items[i].GuessingWord + " | " + items[i].Score);
+                }
+                catch{}
+            }
+
             sw.Close();
             fs.Close();
+        }
+
+        public void ShowHighScore()
+        {
+            var highscores = File.ReadAllLines("files/highscores.txt");
+            Console.WriteLine("====================");
+            Console.WriteLine("Name | Date | Time | Tries | Guessed word | Points");
+            Console.WriteLine("Scoreboard:");
+            foreach(var item in highscores)
+            {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine("====================");
         }
 
         private void EndGame()
@@ -226,9 +292,7 @@ namespace src
             LifePoints = 0;
             Console.WriteLine("You have lost. Drawn word was: " + WordToGuess.Item2);
             Console.WriteLine($"Game took you {Tries} tries and {AverageTime.Minutes} mins and {AverageTime.Seconds} seconds.");
-            Console.WriteLine("====================");
-            Console.WriteLine("Scoreboard:");
-            Console.WriteLine("====================");
+            ShowHighScore();
             Console.WriteLine("Press any key to return to main menu.");
             Console.ReadKey();
         }
