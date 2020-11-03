@@ -51,7 +51,7 @@ namespace src
                     System.Console.WriteLine($"Hint: The capital of {WordToGuess.Item1}");
                 }
                 Console.WriteLine($"Word to guess: {HiddenWord}\nWrong letters: {WrongLetters}\nYour life points: {LifePoints}");
-
+                System.Console.WriteLine(WordToGuess.Item2);
                 Console.WriteLine("Do you want to guess a letter or a whole word?");
                 Console.WriteLine("Write end if you want to exit the game.");
                 do
@@ -100,6 +100,9 @@ namespace src
                 Tries++;
                 EndTime = DateTime.Now;
                 AverageTime = EndTime - StartTime;
+                Console.WriteLine("Enter your name to save your score!");
+                Name = Console.ReadLine();
+                SaveHighScore();
                 EndGame();
             } 
             else 
@@ -210,7 +213,11 @@ namespace src
 
         private void SaveHighScore()
         {
-
+            var fs = new FileStream("files/highscores.txt", FileMode.Append, FileAccess.Write);
+            var sw = new StreamWriter(fs);
+            sw.WriteLine(Name + " | " + DateTime.Now.ToString("MM/dd/yyyy") + " | " + AverageTime.Minutes + ":" + AverageTime.Seconds + " | " + Tries + " | " + WordToGuess.Item2);
+            sw.Close();
+            fs.Close();
         }
 
         private void EndGame()
