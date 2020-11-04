@@ -42,6 +42,8 @@ You can guess a single letter or a whole word, but you have to specify your move
 
 After 5 good attempts in a row without loosing any life points you get a hint!
 
+Guessing a whole word gives you extra time if you guess it, but it can cost you 2 lives if you miss!
+
 ## Winning
 
     Do you want to guess a letter or a whole word?
