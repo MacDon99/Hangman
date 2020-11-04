@@ -101,10 +101,6 @@ namespace src
             {
                 Console.WriteLine("Your guess is good, you win! Press any key to continue.");
                 Tries++;
-                EndTime = DateTime.Now;
-                AverageTime = EndTime - StartTime;
-                Console.WriteLine("Enter your name to save your score!");
-                Name = Console.ReadLine();
                 SaveHighScore();
                 EndGame();
             } 
@@ -186,10 +182,6 @@ namespace src
             if(!HiddenWord.Contains("_"))
             {
                 Console.WriteLine("Congratulations, you won!");
-                EndTime = DateTime.Now;
-                AverageTime = EndTime - StartTime;
-                Console.WriteLine("Enter your name to save your score!");
-                Name = Console.ReadLine();
                 SaveHighScore();
                 EndGame();
             }
@@ -197,6 +189,11 @@ namespace src
 
         private void SaveHighScore()
         {
+            EndTime = DateTime.Now;
+            AverageTime = EndTime - StartTime;
+            Console.WriteLine("Enter your name to save your score!");
+            Name = Console.ReadLine();
+
             var totalScore = ((3600 - (AverageTime.Minutes * 60 + AverageTime.Seconds)*24 - Tries * 12) * 16) * LifePoints;
 
             var highscores = File.ReadAllLines("files/highscores.txt");
@@ -271,6 +268,8 @@ namespace src
         {
             GameOver = true;
             LifePoints = 0;
+            EndTime = DateTime.Now;
+            AverageTime = EndTime - StartTime;
             DrawHangMan(LifePoints);
             Console.WriteLine("You have lost. Drawn word was: " + WordToGuess.Item2);
             Console.WriteLine($"Game took you {Tries} tries and {AverageTime.Minutes} mins and {AverageTime.Seconds} seconds.");
