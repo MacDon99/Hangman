@@ -15,6 +15,7 @@ namespace src
         private DateTime StartTime { get; set; } = DateTime.Now;
         private DateTime EndTime { get; set; }
         private TimeSpan AverageTime { get; set; }
+        private int ExtraTime { get; set;}
         private string WrongLetters { get; set; }
         private string GoodLettersGuessed { get; set;}
         private string Name { get; set;}
@@ -100,6 +101,7 @@ namespace src
             if(normalizedWordToGuess.Equals(wordToCheck.ToLower()))
             {
                 Console.WriteLine("Your guess is good, you win! Press any key to continue.");
+                ExtraTime = 15;
                 Tries++;
                 SaveHighScore();
                 EndGame();
@@ -190,7 +192,7 @@ namespace src
         private void SaveHighScore()
         {
             EndTime = DateTime.Now;
-            AverageTime = EndTime - StartTime;
+            AverageTime = EndTime.AddSeconds(-ExtraTime) - StartTime;
             Console.WriteLine("Enter your name to save your score!");
             Name = Console.ReadLine();
 
@@ -269,7 +271,7 @@ namespace src
             GameOver = true;
             LifePoints = 0;
             EndTime = DateTime.Now;
-            AverageTime = EndTime - StartTime;
+            AverageTime = EndTime.AddSeconds(-ExtraTime) - StartTime;
             DrawHangMan(LifePoints);
             Console.WriteLine("You have lost. Drawn word was: " + WordToGuess.Item2);
             Console.WriteLine($"Game took you {Tries} tries and {AverageTime.Minutes} mins and {AverageTime.Seconds} seconds.");
