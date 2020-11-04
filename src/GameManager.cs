@@ -16,6 +16,7 @@ namespace src
         private DateTime EndTime { get; set; }
         private TimeSpan AverageTime { get; set; }
         private string WrongLetters { get; set; }
+        private string GoodLettersGuessed { get; set;} = "";
         private string Name { get; set;}
         private (string, string) WordToGuess { get; set; }
 
@@ -51,8 +52,7 @@ namespace src
                     Console.WriteLine($"Hint: The capital of {WordToGuess.Item1}");
                 }
                 DrawHangMan(LifePoints);
-                Console.WriteLine($"Word to guess: {HiddenWord}\nWrong letters: {WrongLetters}\nYour life points: {LifePoints}");
-                Console.WriteLine(WordToGuess.Item2);
+                Console.WriteLine($"Word to guess: {HiddenWord}\nWrong letters: {WrongLetters}\nGuessed letters: {GoodLettersGuessed}\nYour life points: {LifePoints}");
                 Console.WriteLine("Do you want to guess a letter or a whole word?");
                 Console.WriteLine("Write end if you want to exit the game.");
                 do
@@ -159,7 +159,7 @@ namespace src
             }
             var normalizedWordToGuess = WordToGuess.Item2.ToLower();
 
-            if(normalizedWordToGuess.Equals(wordToCheck))
+            if(normalizedWordToGuess.Equals(wordToCheck.ToLower()))
             {
                 Console.WriteLine("Your guess is good, you win! Press any key to continue.");
                 Tries++;
@@ -188,9 +188,9 @@ namespace src
         {
             Console.WriteLine("Write the letter you want to check");
             var letterToCheck = Console.ReadLine();
-            if(string.IsNullOrEmpty(letterToCheck))
+            if(string.IsNullOrEmpty(letterToCheck) || GoodLettersGuessed.Contains(letterToCheck) || WrongLetters.Contains(letterToCheck))
             {
-                System.Console.WriteLine("Please enter correct value, press any key to continue.");
+                System.Console.WriteLine("Please enter correct value or a letter that you haven't used yet.");
                 Console.ReadKey();
                 return;
             }
@@ -207,6 +207,7 @@ namespace src
                 }
                 HiddenWord = new string(x);
                 Console.WriteLine("You hit a good letter! Press any key to continue.");
+                GoodLettersGuessed += letterToCheck;
                 Tries++;
                 CheckIfWin();
                 Console.ReadKey();

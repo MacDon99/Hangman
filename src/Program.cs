@@ -7,8 +7,8 @@ namespace src
 {
     class Program
     {
-        public static GameManager GameManager { get; set; } = new GameManager();
-        public static string Option { get; set; }
+        private static GameManager GameManager = new GameManager();
+        private static string Option;
         static void Main(string[] args)
         {
             GameManager.ShowGameRules();
