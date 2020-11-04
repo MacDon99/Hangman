@@ -16,7 +16,7 @@ namespace src
         private DateTime EndTime { get; set; }
         private TimeSpan AverageTime { get; set; }
         private string WrongLetters { get; set; }
-        private string GoodLettersGuessed { get; set;} = "";
+        private string GoodLettersGuessed { get; set;}
         private string Name { get; set;}
         private (string, string) WordToGuess { get; set; }
 
@@ -36,6 +36,8 @@ namespace src
             LifePoints = 5;
             GameOver = false;
             WrongLetters = "";
+            GoodLettersGuessed = "";
+            Tries = 0;
             WordToGuess = GetRandomWordFromFile();
             HiddenWord = EncodeWord(WordToGuess.Item2);
             
