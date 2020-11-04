@@ -83,70 +83,6 @@ namespace src
                 
         }
 
-        private void DrawHangMan(int lifePoints)
-        {
-            if(lifePoints == 5)
-            {
-                Console.WriteLine(" ------");
-                Console.WriteLine(" |    |");
-                Console.WriteLine(" |");
-                Console.WriteLine(" |");
-                Console.WriteLine(" |");
-                Console.WriteLine(" |");
-                Console.WriteLine("---");
-            } 
-            else if(lifePoints == 4)
-            {
-                Console.WriteLine(" ------");
-                Console.WriteLine(" |    |");
-                Console.WriteLine(" |   [ ]");
-                Console.WriteLine(" |");
-                Console.WriteLine(" |");
-                Console.WriteLine(" |");
-                Console.WriteLine("---");
-            }
-            else if(lifePoints == 3)
-            {
-                Console.WriteLine(" ------");
-                Console.WriteLine(" |    |");
-                Console.WriteLine(" |   [ ]");
-                Console.WriteLine(" |    |");
-                Console.WriteLine(" |");
-                Console.WriteLine(" |");
-                Console.WriteLine("---");
-            }
-            else if(lifePoints == 2)
-            {
-                Console.WriteLine(" ------");
-                Console.WriteLine(" |    |");
-                Console.WriteLine(" |   [ ]");
-                Console.WriteLine(" |   _|_");
-                Console.WriteLine(" |");
-                Console.WriteLine(" |");
-                Console.WriteLine("---");
-            }
-            else if(lifePoints == 1)
-            {
-                Console.WriteLine(" ------");
-                Console.WriteLine(" |    |");
-                Console.WriteLine(" |   [ ]");
-                Console.WriteLine(" |   _|_");
-                Console.WriteLine(" |    |");
-                Console.WriteLine(" |");
-                Console.WriteLine("---");
-            }
-            else
-            {
-                Console.WriteLine(" ------");
-                Console.WriteLine(" |    |");
-                Console.WriteLine(" |   [ ]");
-                Console.WriteLine(" |   _|_");
-                Console.WriteLine(" |   _|_");
-                Console.WriteLine(" |");
-                Console.WriteLine("---");
-            }
-        }
-
         private void CheckIfWordToGuessEqualsGivenWord()
         {
             Console.WriteLine("Write the word you want to check");
@@ -219,28 +155,6 @@ namespace src
                 Tries++;
                 TakeOneLife();
             }
-        }
-        private (string, string) GetRandomWordFromFile()
-        {
-            var filePath = "files/countries_and_capitals.txt";
-            var dictionary = new Dictionary<string, string>();
-            var rand = new Random();
-
-            File.ReadAllLines(filePath)
-                .ToList()
-                .ForEach(el =>
-                {
-                    var splittedItems = el.Split(" | ");
-                    if (splittedItems.Count() == 2)
-                        dictionary.Add(splittedItems[0], splittedItems[1]);
-                });
-
-            var randomItemIndex = rand.Next(0, dictionary.Count);
-
-            var city = dictionary.Keys.ElementAt(randomItemIndex);
-            var capital = dictionary.Values.ElementAt(randomItemIndex);
-
-            return (city, capital);
         }
         private void TakeOneLife()
         {
@@ -351,7 +265,6 @@ namespace src
             }
             Console.WriteLine("====================");
         }
-
         private void EndGame()
         {
             GameOver = true;
@@ -362,6 +275,91 @@ namespace src
             ShowHighScore();
             Console.WriteLine("Press any key to return to main menu.");
             Console.ReadKey();
+        }
+        private (string, string) GetRandomWordFromFile()
+        {
+            var filePath = "files/countries_and_capitals.txt";
+            var dictionary = new Dictionary<string, string>();
+            var rand = new Random();
+
+            File.ReadAllLines(filePath)
+                .ToList()
+                .ForEach(el =>
+                {
+                    var splittedItems = el.Split(" | ");
+                    if (splittedItems.Count() == 2)
+                        dictionary.Add(splittedItems[0], splittedItems[1]);
+                });
+
+            var randomItemIndex = rand.Next(0, dictionary.Count);
+
+            var city = dictionary.Keys.ElementAt(randomItemIndex);
+            var capital = dictionary.Values.ElementAt(randomItemIndex);
+
+            return (city, capital);
+        }
+        private void DrawHangMan(int lifePoints)
+        {
+            if(lifePoints == 5)
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            } 
+            else if(lifePoints == 4)
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |   [ ]");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            }
+            else if(lifePoints == 3)
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |   [ ]");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            }
+            else if(lifePoints == 2)
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |   [ ]");
+                Console.WriteLine(" |   _|_");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            }
+            else if(lifePoints == 1)
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |   [ ]");
+                Console.WriteLine(" |   _|_");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            }
+            else
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |   [ ]");
+                Console.WriteLine(" |   _|_");
+                Console.WriteLine(" |   _|_");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            }
         }
     }
 }
