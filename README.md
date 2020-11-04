@@ -31,12 +31,12 @@ As it follows you can see a hangman acsi, guessing word, wrong and good guessing
      |
     ---
 
-Word to guess: ________
-Wrong letters:
-Guessed letters:
-Your life points: 5
-Do you want to guess a letter or a whole word?
-Write end if you want to exit the game.
+    Word to guess: ________
+    Wrong letters:
+    Guessed letters:
+    Your life points: 5
+    Do you want to guess a letter or a whole word?
+    Write end if you want to exit the game.
 
 You can guess a single letter or a whole word, but you have to specify your move first, for example to guess a letter you have to write "letter" click enter and then type the letter you want to check.
 
