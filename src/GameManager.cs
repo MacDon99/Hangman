@@ -48,10 +48,11 @@ namespace src
 
                 if(Tries == 5 && LifePoints == 5)
                 {
-                    System.Console.WriteLine($"Hint: The capital of {WordToGuess.Item1}");
+                    Console.WriteLine($"Hint: The capital of {WordToGuess.Item1}");
                 }
+                DrawHangMan(LifePoints);
                 Console.WriteLine($"Word to guess: {HiddenWord}\nWrong letters: {WrongLetters}\nYour life points: {LifePoints}");
-                System.Console.WriteLine(WordToGuess.Item2);
+                Console.WriteLine(WordToGuess.Item2);
                 Console.WriteLine("Do you want to guess a letter or a whole word?");
                 Console.WriteLine("Write end if you want to exit the game.");
                 do
@@ -80,6 +81,70 @@ namespace src
                 }while(answer != "letter" && answer != "word" && answer != "end");
             }while(answer != "end");
                 
+        }
+
+        private void DrawHangMan(int lifePoints)
+        {
+            if(lifePoints == 5)
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            } 
+            else if(lifePoints == 4)
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |   [ ]");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            }
+            else if(lifePoints == 3)
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |   [ ]");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            }
+            else if(lifePoints == 2)
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |   [ ]");
+                Console.WriteLine(" |   _|_");
+                Console.WriteLine(" |");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            }
+            else if(lifePoints == 1)
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |   [ ]");
+                Console.WriteLine(" |   _|_");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            }
+            else
+            {
+                Console.WriteLine(" ------");
+                Console.WriteLine(" |    |");
+                Console.WriteLine(" |   [ ]");
+                Console.WriteLine(" |   _|_");
+                Console.WriteLine(" |   _|_");
+                Console.WriteLine(" |");
+                Console.WriteLine("---");
+            }
         }
 
         private void CheckIfWordToGuessEqualsGivenWord()
@@ -290,6 +355,7 @@ namespace src
         {
             GameOver = true;
             LifePoints = 0;
+            DrawHangMan(LifePoints);
             Console.WriteLine("You have lost. Drawn word was: " + WordToGuess.Item2);
             Console.WriteLine($"Game took you {Tries} tries and {AverageTime.Minutes} mins and {AverageTime.Seconds} seconds.");
             ShowHighScore();
